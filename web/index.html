@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f2ff55">
+  <meta name="description" content="Gün sonunda kalan güvenli porsiyonları yakındaki insanlarla buluşturan açık teslim ağı.">
+  <title>SonPorsiyon — Yakında kalan, çöpe gitmesin</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23f2ff55'/%3E%3Cpath d='M18 18h28v9H29v5h14v8H29v6H18z' fill='%23111827'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Paketlere geç</a>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="SonPorsiyon paketlerine dön"><b>SP</b><span>SonPorsiyon</span></a>
+    <nav aria-label="Ana görünüm">
+      <button class="nav-pill active consumer-only" data-view="discover" aria-current="page">Paketler</button>
+      <button class="nav-pill consumer-only" data-view="impact">Canlı durum</button>
+      <a class="nav-pill consumer-only business-entry" href="/isletme">İşletmeler için</a>
+      <a class="nav-pill business-only" href="/">Kullanıcı görünümü</a>
+    </nav>
+    <button class="profile consumer-only" id="myPickup">Teslim kodum <span>0</span></button>
+  </header>
+
+  <main id="main">
+    <section class="discover view active consumer-only" id="discoverView">
+      <div class="intro">
+        <p class="eyebrow" id="locationEyebrow">BUGÜN · TESLİM NOKTALARI</p>
+        <h1>Yakında kalan,<br><em>çöpe gitmesin.</em></h1>
+        <p>Satılmayacak ama hâlâ güvenli olan gün sonu paketini ücretsiz ayır.</p>
+        <p class="network-summary" id="networkSummary" aria-live="polite">Uygun paketler yükleniyor.</p>
+        <ol class="quick-steps" aria-label="Nasıl çalışır">
+          <li><b>1</b><span>Paketi seç</span></li>
+          <li><b>2</b><span>Süresi içinde git</span></li>
+          <li><b>3</b><span>Kodunu göster</span></li>
+        </ol>
+      </div>
+
+      <button class="location-button location-button-mobile" type="button" data-location-action>KONUMUMA GÖRE SIRALA</button>
+
+      <article class="featured" data-batch="firin">
+        <img id="featuredImage" src="/assets/komsu-firin.jpg" alt="Komşu Fırın sandviç paketi">
+        <div class="featured-overlay"><span>TESLİM NOKTASI YÜKLENİYOR</span><strong>Stok alınıyor</strong></div>
+        <div class="featured-copy">
+          <div><p class="provider-name"><span id="featuredProvider">İŞLETME</span> <i>YEREL SAĞLAYICI</i></p><h2 id="featuredTitle">Gün sonu paketi</h2><p id="featuredMeta">Paket bilgileri yükleniyor</p></div>
+          <button class="claim" data-slot="0" disabled><span>Stok alınıyor</span><b>ÜCRETSİZ</b></button>
+        </div>
+      </article>
+
+      <aside class="live-rail" aria-label="Yakındaki teslim noktaları">
+        <div class="rail-head"><span>MESAFE GÖRÜNÜMÜ</span><i></i><b id="locationState">Konum kapalı</b></div>
+        <div class="pulse"><strong>—</strong><span id="availabilityScope">İstanbul’da<br>uygun porsiyon</span></div>
+        <button class="location-button" type="button" data-location-action>KONUMUMA GÖRE SIRALA</button>
+        <div class="mini-map" id="nearbyPlot" aria-label="Konuma göre teslim noktaları"><p class="map-empty">Konumunu yalnız bu cihazda kullanarak gerçek mesafeleri görebilirsin.</p></div>
+        <ol class="network-feed">
+          <li><i></i><span>Moda Yemekhane</span><b>5 paket</b></li>
+          <li><i></i><span>Akşam Kafe</span><b>4 paket</b></li>
+        </ol>
+      </aside>
+
+      <section class="package-market" aria-labelledby="marketTitle">
+        <div class="market-head">
+          <div><p class="eyebrow">BUGÜNÜN PAKETLERİ</p><h2 id="marketTitle">Diğer seçenekler</h2></div>
+          <p>İşletmeyi, teslim noktasını ve içeriği karşılaştır; sana uygun paketi ayır.</p>
+        </div>
+        <p class="sync-status" id="syncStatus" role="status" hidden></p>
+        <div class="package-grid" id="packageGrid"></div>
+      </section>
+    </section>
+
+    <section class="provider-view view business-only" id="providerView" hidden>
+      <header class="workspace-head">
+        <div><p class="eyebrow">İŞLETME ÇALIŞMA ALANI</p><h1>Fazlayı yayınla.<br><em>Teslimi tek yerden yönet.</em></h1></div>
+        <div class="provider-proof"><span>İŞLETME ERİŞİMİ</span><strong>Sağlayıcı paneli</strong><p id="monadMode">Bağlantı durumu yükleniyor.</p></div>
+      </header>
+      <form class="provider-login" id="providerLogin">
+        <div><span>MEVCUT İŞLETME GİRİŞİ</span><strong>Monad cüzdanınla devam et.</strong><p>Daha önce kaydettiğin cüzdanda ücretsiz bir giriş mesajı imzalayarak panelini aç.</p><p class="access-message" id="providerAccessMessage" aria-live="polite"></p></div>
+        <div class="wallet-network"><i></i><span>EVM CÜZDANI</span><b>Kimlik imzası · işlem değil</b></div>
+        <button type="submit" data-wallet-action>MONAD CÜZDANINI BAĞLA</button>
+      </form>
+      <details class="provider-application" id="providerApplication">
+        <summary><span>İLK KEZ Mİ?</span><strong>İşletmeni kaydet ve panelini aç <b>↓</b></strong></summary>
+        <div class="application-layout compact-application">
+          <div class="application-explainer">
+            <p class="eyebrow">YENİ İŞLETME</p>
+            <h2>İşletmeni ekle,<br><em>paneli aç.</em></h2>
+            <p>İşletme adını ve teslim adresini ekle; cüzdan imzanla panelini aç.</p>
+          </div>
+          <form id="providerApplicationForm" class="application-form">
+            <label>İşletme adı<input name="businessName" required minlength="3" maxlength="90" placeholder="Örn. Komşu Fırın"></label>
+            <label>İşletmenin açık teslim adresi<input name="businessAddress" required minlength="10" maxlength="180" placeholder="Mahalle, cadde, kapı no, ilçe / il"></label>
+            <button type="submit" data-wallet-action>CÜZDANLA İMZALA VE PANELE GİR</button>
+            <p class="application-status" id="providerApplicationStatus" aria-live="polite">İmza ücretsizdir; blockchain işlemi oluşturmaz.</p>
+          </form>
+        </div>
+      </details>
+      <div class="provider-session" id="providerSession" hidden>
+        <div><span id="providerVerification">CÜZDAN DOĞRULANDI</span><strong id="providerBusiness">İşletme hesabı</strong><code id="providerWallet">0x—</code></div>
+        <button id="providerLogout" type="button">ÇIKIŞ YAP</button>
+      </div>
+      <div class="provider-grid" id="providerWorkspace" hidden>
+        <form class="publish-form" id="publishForm">
+          <div class="section-label"><b>01</b><span>YENİ PARTİ</span></div>
+          <label>İşletmenin görünen adı<input name="businessName" value="Mahalle İşletmesi" required maxlength="70"></label>
+          <label>Paket adı<input name="title" value="Gün sonu sandviç paketi" required maxlength="50"></label>
+          <label>Paketin içeriği<input name="contents" value="1 sandviç, 1 ekmek ve 1 meyve" required maxlength="140"></label>
+          <div class="field-row"><label>Kaç porsiyon?<input name="quantity" type="number" min="1" max="30" value="8" required></label><label>Teslim tarihi<input name="pickupDate" type="date" required></label></div>
+          <div class="field-row"><label>Son teslim saati<input name="deadline" type="time" value="20:30" required></label><label>Hazırlanma saati<input name="preparedAt" type="time" value="19:00" required></label></div>
+          <label>Ayırma süresi<select name="claimTtlMinutes" required><option value="15">15 dakika</option><option value="30" selected>30 dakika</option><option value="45">45 dakika</option><option value="60">60 dakika</option></select><small>Kullanıcı bu süre içinde teslim almalıdır. Son teslim daha yakınsa süre otomatik kısalır.</small></label>
+          <label>Saklama türü<input name="storage" value="Oda sıcaklığında kapalı paket" required maxlength="80"></label>
+          <label>Alerjen / içerik notu<input name="allergens" value="Gluten ve süt ürünü içerir" required maxlength="90"></label>
+          <label>Teslim adresi<input name="address" placeholder="Mahalle, cadde, kapı numarası ve ilçe" required maxlength="160"></label>
+          <div class="provider-location"><input name="latitude" type="hidden"><input name="longitude" type="hidden"><button id="captureProviderLocation" type="button">TESLİM NOKTASININ KONUMUNU AL</button><p id="providerLocationState">Harita konumu henüz eklenmedi.</p></div>
+          <label class="safety"><input name="safety" type="checkbox" required><span>Bugün hazırlandı; güvenli saklama ve teslim sorumluluğunun sağlayıcıda olduğunu onaylıyorum.</span></label>
+          <button class="publish-button" type="submit"><span>Partiyi yayınla</span><b>Her porsiyon ayrı bir slot olur</b></button>
+          <p class="form-note">Paketler ücretsizdir. Ürünün güvenli saklanması, içerik ve alerjen bilgisinin doğruluğu işletmenin sorumluluğundadır.</p>
+        </form>
+
+        <section class="counter-desk" aria-labelledby="counterTitle">
+          <div class="section-label"><b>02</b><span>TESLİM MASASI</span></div>
+          <h2 id="counterTitle">Teslim kodunu doğrula</h2>
+          <p>Kullanıcının telefonundaki altı karakterli kodu gir. Aynı porsiyon ikinci kez teslim edilemez.</p>
+          <form id="redeemForm" class="redeem-form"><input id="redeemCode" maxlength="7" placeholder="SP-4K2" autocomplete="off" aria-label="Teslim kodu"><button>TESLİMİ ONAYLA</button></form>
+          <div class="last-event" id="lastCounterEvent"><span>SON İŞLEM</span><strong>Henüz teslim yok</strong><p>Yeni bir teslim burada görünecek.</p><a class="directions-link chain-proof" id="lastRedeemProof" target="_blank" rel="noopener" hidden>MONAD TESLİM İŞLEMİNİ AÇ ↗</a></div>
+          <div class="batch-slots" id="batchSlots" aria-label="Son partideki porsiyon durumları"></div>
+        </section>
+        <section class="provider-listings" aria-labelledby="providerListingsTitle">
+          <div class="section-label"><b>03</b><span>YAYINLARIM</span></div>
+          <div class="listing-heading"><div><h2 id="providerListingsTitle">Aktif paketlerini yönet</h2><p>Adet veya teslim saatini değiştir; ürün bittiyse ya da imha edildiyse yayını gerekçesiyle kapat.</p></div></div>
+          <div class="provider-listing-grid" id="providerListings"></div>
+        </section>
+      </div>
+    </section>
+
+    <section class="impact-view view consumer-only" id="impactView" hidden>
+      <header class="impact-head"><p class="eyebrow">İSTANBUL SAATİYLE BUGÜN</p><h1>Bugünkü paylaşım<br><em>ve teslim durumu.</em></h1><p>İşletmelerin bugün yayınladığı porsiyonları ve tamamlanan teslimleri burada görebilirsin.</p></header>
+      <div class="metrics" aria-label="Bugünkü paylaşım sayıları">
+        <article><span>BUGÜN LİSTELENEN</span><strong id="publishedMetric">—</strong><p>aktif yayınlardaki mevcut porsiyon</p></article>
+        <article><span>ŞU AN AYRILDI</span><strong id="claimedMetric">0</strong><p>aktif kullanıcı ayırması</p></article>
+        <article class="accent"><span>BUGÜN TESLİM EDİLDİ</span><strong id="redeemedMetric">0</strong><p>kodla tamamlanan teslim</p></article>
+        <article><span>BUGÜN GERİ AÇILDI</span><strong id="releasedMetric">0</strong><p>yeniden alınabilir olan porsiyon</p></article>
+      </div>
+      <div class="impact-grid">
+        <section class="ledger"><div class="section-label"><b>CANLI</b><span>İŞLEM AKIŞI</span></div><ol id="eventLedger"></ol></section>
+        <aside class="network-card how-card">
+          <p class="eyebrow">NASIL ÇALIŞIR?</p><h2>Ayır, zamanında git, kodunu göster.</h2>
+          <ol><li><b>01</b><span>Yakınındaki ücretsiz paketi ayır.</span></li><li><b>02</b><span>Süre dolmadan teslim noktasına git.</span></li><li><b>03</b><span>Tek kullanımlık kodunu görevliye göster.</span></li></ol>
+          <p class="network-note">Gidemeyeceksen paketi geri bırak; başka biri zamanında alabilsin.</p>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="pickupDialog" aria-labelledby="pickupTitle">
+    <div class="dialog-head"><div><span>KİŞİSEL TESLİM</span><h2 id="pickupTitle">Paketin ayrıldı.</h2></div><button class="dialog-close" data-close="pickupDialog" aria-label="Pencereyi kapat">×</button></div>
+    <div class="pickup-content">
+      <div class="pickup-code"><span>TESLİM KODU</span><strong id="pickupCode">SP-—</strong><p class="manual-code-note">Teslim noktasında bu kodu görevliye göster.</p></div>
+        <div class="pickup-details"><p class="provider-name" id="pickupProvider">KOMŞU FIRIN · CİHANGİR</p><h3 id="pickupProduct">Sandviç + ekmek paketi</h3><p id="pickupContents">Paket içeriği</p><a class="directions-link" id="pickupDirections" target="_blank" rel="noopener">HARİTADA AÇ ↗</a><a class="directions-link chain-proof" id="pickupChainProof" target="_blank" rel="noopener" hidden>MONAD İŞLEMİNİ AÇ ↗</a><p><b id="claimCountdown">15:00</b> içinde teslim noktasına gel; yoksa porsiyon otomatik geri açılır. Gıda son teslimi: <b id="pickupDeadline">20.30</b>.</p><ol><li>Kasada bu ekranı göster.</li><li>Görevli kodu doğrulasın.</li><li>Teslim kaydı ortak sayaca işlensin.</li></ol></div>
+    </div>
+    <div class="dialog-actions"><button id="releaseClaim">Paketi geri bırak</button><button class="primary" data-close="pickupDialog">Tamam</button></div>
+  </dialog>
+
+  <dialog id="batchEditDialog" aria-labelledby="batchEditTitle">
+    <form id="batchEditForm" class="batch-edit-form">
+      <div class="dialog-head"><div><span>YAYINI DÜZENLE</span><h2 id="batchEditTitle">Paket bilgileri</h2></div><button type="button" class="dialog-close" data-close="batchEditDialog" aria-label="Pencereyi kapat">×</button></div>
+      <input name="batchId" type="hidden">
+      <div class="edit-fields">
+        <label>Paket adı<input name="title" required maxlength="50"></label>
+        <label>İçerik<input name="contents" required maxlength="140"></label>
+        <label>Porsiyon adedi<input name="quantity" type="number" min="1" max="30" required></label>
+        <label>Teslim tarihi<input name="pickupDate" type="date" required></label>
+        <label>Son teslim saati<input name="deadline" type="time" required></label>
+        <label>Ayırma süresi<select name="claimTtlMinutes" required><option value="15">15 dakika</option><option value="30">30 dakika</option><option value="45">45 dakika</option><option value="60">60 dakika</option></select><small>Yalnız yeni ayırmalar için geçerlidir. Son teslim daha yakınsa süre kısalır.</small></label>
+        <label>Alerjen notu<input name="allergens" maxlength="90"></label>
+      </div>
+      <div class="dialog-actions"><button type="button" data-close="batchEditDialog">Vazgeç</button><button class="primary" type="submit">DEĞİŞİKLİKLERİ KAYDET</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="noticeDialog" aria-labelledby="noticeTitle">
+    <div class="dialog-head"><div><span>PAKET GÜNCELLEMESİ</span><h2 id="noticeTitle">Ayırdığın paket kaldırıldı</h2></div><button class="dialog-close" data-close="noticeDialog" aria-label="Pencereyi kapat">×</button></div>
+    <div class="notice-content"><p id="noticeMessage"></p><p>Bu paket için aldığın teslim kodu artık kullanılamaz. Başka bir paket seçebilirsin.</p></div>
+    <div class="dialog-actions"><button class="primary" data-close="noticeDialog">PAKETLERE DÖN</button></div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <button class="mobile-pickup consumer-only" id="mobilePickup" hidden>TESLİM KODUM <b>1</b></button>
+  <footer><b>SonPorsiyon</b><span>ÜCRETSİZ PAKETLER · ZAMANLI TESLİM · DAHA AZ İSRAF</span><a class="consumer-only" href="/isletme">İŞLETME GİRİŞİ ↗</a><a class="business-only" href="/">PAKETLERE DÖN ↗</a></footer>
+</body>
+</html>

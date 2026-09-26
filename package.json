@@ -1,0 +1,35 @@
+{
+  "name": "sonporsiyon-monad",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node server.mjs",
+    "check": "node --check web/app.js && node --check web/p256-device.js && node --check server.mjs && node --check scripts/deploy-monad.mjs && node --check scripts/e2e-monad.mjs && node --check scripts/e2e-monad-ui.cjs && node --check scripts/compile-contract.mjs && node --check scripts/build-site.mjs && node --check scripts/p256-self-test.mjs && node --check worker/runtime.js",
+    "compile": "node scripts/compile-contract.mjs",
+    "test:browser": "node tests/browser-check.cjs",
+    "test:parity": "node scripts/api-parity-test.mjs",
+    "test:p256": "node scripts/p256-self-test.mjs",
+    "test:worker": "npm run build:site && node tests/worker-check.mjs",
+    "test": "npm run check && npm run compile && npm run test:p256 && npm run test:parity && npm run test:worker && npm run test:browser",
+    "deploy:monad": "node scripts/deploy-monad.mjs",
+    "e2e:monad": "node scripts/e2e-monad.mjs",
+    "e2e:monad-ui": "node scripts/e2e-monad-ui.cjs",
+    "db:generate": "drizzle-kit generate",
+    "build:site": "node scripts/build-site.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "drizzle-kit": "0.31.10",
+    "drizzle-orm": "0.45.2",
+    "ethers": "^6.17.0",
+    "playwright": "1.62.1",
+    "solc": "0.8.37"
+  },
+  "overrides": {
+    "esbuild": "0.25.12",
+    "tmp": "0.2.7"
+  }
+}
